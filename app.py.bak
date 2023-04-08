@@ -1,0 +1,27 @@
+from flask import Flask, render_template, request, redirect
+
+app = Flask(__name__)
+
+recipes = []
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/save_recipe', methods=['GET', 'POST'])
+def save_recipe():
+    if request.method == 'POST':
+        name = request.form['name']
+        ingredients = request.form['ingredients']
+        instructions = request.form['instructions']
+        recipe = {'name': name, 'ingredients': ingredients, 'instructions': instructions}
+        recipes.append(recipe)
+        return redirect('/')
+    return render_template('save_recipe.html')
+
+@app.route('/recipes')
+def display_recipes():
+    return render_template('recipes.html', recipes=recipes)
+
+if __name__ == '__main__':
+    app.run(debug=True)
